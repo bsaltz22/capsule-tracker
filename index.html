@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Capsule Tracker</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 20px;
+      background: #f5f5f5;
+    }
+    h1 {
+      text-align: center;
+    }
+    .capsule {
+      margin-bottom: 12px;
+    }
+    label {
+      display: inline-block;
+      width: 40px;
+    }
+    input {
+      width: 200px;
+      padding: 6px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Capsule Tracker</h1>
+  <div id="capsule-list"></div>
+
+  <script>
+    const container = document.getElementById('capsule-list');
+    for (let i = 1; i <= 9; i++) {
+      const div = document.createElement('div');
+      div.className = 'capsule';
+      const label = document.createElement('label');
+      label.textContent = i;
+      const input = document.createElement('input');
+      input.type = 'text';
+      input.value = localStorage.getItem('capsule_' + i) || '';
+      input.addEventListener('input', () => {
+        localStorage.setItem('capsule_' + i, input.value);
+      });
+      div.appendChild(label);
+      div.appendChild(input);
+      container.appendChild(div);
+    }
+  </script>
+</body>
+</html>
