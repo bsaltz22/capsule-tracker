@@ -21,7 +21,7 @@
       box-shadow: 0 1px 3px rgba(0,0,0,0.1);
       display: flex;
       align-items: center;
-      gap: 20px;
+      gap: 15px;
     }
     label {
       width: 30px;
@@ -34,18 +34,24 @@
       border: 1px solid #ccc;
       border-radius: 4px;
     }
-    input[type="checkbox"] {
-      transform: scale(1.2);
-    }
     button {
       padding: 6px 10px;
       border: none;
       border-radius: 4px;
-      background: #e74c3c;
-      color: white;
       cursor: pointer;
     }
-    button:hover {
+    .state-btn {
+      background: #3498db;
+      color: #fff;
+    }
+    .state-btn:hover {
+      background: #2980b9;
+    }
+    .clear-btn {
+      background: #e74c3c;
+      color: #fff;
+    }
+    .clear-btn:hover {
       background: #c0392b;
     }
   </style>
@@ -56,6 +62,8 @@
 
   <script>
     const container = document.getElementById('capsule-list');
+    const states = ['🚫', '🔄', '✅'];
+
     for (let i = 1; i <= 9; i++) {
       const div = document.createElement('div');
       div.className = 'capsule';
@@ -71,26 +79,31 @@
         localStorage.setItem('capsule_' + i, input.value);
       });
 
-      const checkbox = document.createElement('input');
-      checkbox.type = 'checkbox';
-      checkbox.checked = localStorage.getItem('capsule_done_' + i) === 'true';
-      checkbox.addEventListener('change', () => {
-        localStorage.setItem('capsule_done_' + i, checkbox.checked);
+      const stateBtn = document.createElement('button');
+      let currentState = parseInt(localStorage.getItem('capsule_state_' + i)) || 0;
+      stateBtn.textContent = states[currentState];
+      stateBtn.className = 'state-btn';
+      stateBtn.addEventListener('click', () => {
+        currentState = (currentState + 1) % states.length;
+        stateBtn.textContent = states[currentState];
+        localStorage.setItem('capsule_state_' + i, currentState);
       });
 
-      const button = document.createElement('button');
-      button.textContent = 'Clear';
-      button.addEventListener('click', () => {
+      const clearBtn = document.createElement('button');
+      clearBtn.textContent = 'Clear';
+      clearBtn.className = 'clear-btn';
+      clearBtn.addEventListener('click', () => {
         input.value = '';
-        checkbox.checked = false;
+        currentState = 0;
+        stateBtn.textContent = states[currentState];
         localStorage.removeItem('capsule_' + i);
-        localStorage.setItem('capsule_done_' + i, false);
+        localStorage.setItem('capsule_state_' + i, currentState);
       });
 
       div.appendChild(label);
       div.appendChild(input);
-      div.appendChild(checkbox);
-      div.appendChild(button);
+      div.appendChild(stateBtn);
+      div.appendChild(clearBtn);
       container.appendChild(div);
     }
   </script>
