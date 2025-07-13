@@ -15,14 +15,38 @@
     }
     .capsule {
       margin-bottom: 12px;
+      background: #fff;
+      padding: 8px 12px;
+      border-radius: 6px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      display: flex;
+      align-items: center;
+      gap: 20px;
     }
     label {
-      display: inline-block;
-      width: 40px;
+      width: 30px;
+      font-weight: bold;
     }
-    input {
-      width: 200px;
+    input[type="text"] {
+      flex: none;
+      width: 160px;
       padding: 6px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    input[type="checkbox"] {
+      transform: scale(1.2);
+    }
+    button {
+      padding: 6px 10px;
+      border: none;
+      border-radius: 4px;
+      background: #e74c3c;
+      color: white;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #c0392b;
     }
   </style>
 </head>
@@ -32,35 +56,43 @@
 
   <script>
     const container = document.getElementById('capsule-list');
-for (let i = 1; i <= 9; i++) {
-  const div = document.createElement('div');
-  div.className = 'capsule';
+    for (let i = 1; i <= 9; i++) {
+      const div = document.createElement('div');
+      div.className = 'capsule';
 
-  const label = document.createElement('label');
-  label.textContent = i;
+      const label = document.createElement('label');
+      label.textContent = i;
 
-  const input = document.createElement('input');
-  input.type = 'text';
-  input.placeholder = 'Enter strain...';
-  input.value = localStorage.getItem('capsule_' + i) || '';
-  input.addEventListener('input', () => {
-    localStorage.setItem('capsule_' + i, input.value);
-  });
+      const input = document.createElement('input');
+      input.type = 'text';
+      input.placeholder = 'Enter strain...';
+      input.value = localStorage.getItem('capsule_' + i) || '';
+      input.addEventListener('input', () => {
+        localStorage.setItem('capsule_' + i, input.value);
+      });
 
-  const button = document.createElement('button');
-  button.textContent = 'Clear';
-  button.style.marginLeft = '10px';
-  button.addEventListener('click', () => {
-    input.value = '';
-    localStorage.removeItem('capsule_' + i);
-  });
+      const checkbox = document.createElement('input');
+      checkbox.type = 'checkbox';
+      checkbox.checked = localStorage.getItem('capsule_done_' + i) === 'true';
+      checkbox.addEventListener('change', () => {
+        localStorage.setItem('capsule_done_' + i, checkbox.checked);
+      });
 
-  div.appendChild(label);
-  div.appendChild(input);
-  div.appendChild(button);
-  container.appendChild(div);
-}
+      const button = document.createElement('button');
+      button.textContent = 'Clear';
+      button.addEventListener('click', () => {
+        input.value = '';
+        checkbox.checked = false;
+        localStorage.removeItem('capsule_' + i);
+        localStorage.setItem('capsule_done_' + i, false);
+      });
 
+      div.appendChild(label);
+      div.appendChild(input);
+      div.appendChild(checkbox);
+      div.appendChild(button);
+      container.appendChild(div);
+    }
   </script>
 </body>
 </html>
